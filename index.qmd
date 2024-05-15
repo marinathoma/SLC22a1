@@ -17,7 +17,9 @@ library(Seurat)
 library(SCnorm)
 ```
 
-**Create Seurat + QC**
+# Seurat analysis for SLC22a1 project
+
+## **Step 1: Create Seurat + QC**
 
 In the following code we create a seurat object and do standard QC
 
@@ -68,7 +70,7 @@ seurat
 
 ```
 
-**Normalizing and identification of highly variable genes**
+## **Step 2: Normalizing and identification of highly variable genes**
 
 ```{r fig.width=5, fig.height=4, message=FALSE, warning=FALSE}
 #| label: normalizing
@@ -92,7 +94,7 @@ all.genes <- rownames(seurat)
 seurat <- ScaleData(seurat, features = all.genes)
 ```
 
-**Principal componant analysis (PCA)**
+## **Step 3: Principal componant analysis (PCA)**
 
 ```{r fig.width=9, fig.height=4, message=FALSE, warning=FALSE}
 #| label: PCA
@@ -106,7 +108,9 @@ VizDimLoadings(seurat, dims = 1:2, reduction = "pca")
 
 ```
 
-**Cluster the cells**
+# **Visualisation of the cells**
+
+## Step 4: Clustering
 
 ```{r fig.width=5, fig.height=4, message=FALSE, warning=FALSE}
 #| label: clustering
@@ -133,15 +137,18 @@ CC_markers <- c("Itga1", "Itga5", "Itga7", "Cdh2", "Cdh11", "Nectin2", "Selp", "
 
 ```
 
-```{r fig.width=5, fig.height=4}
+### Feature Plot for marker genes
+
+```{r fig.width=10, fig.height=18}
 #| label: feature_marker_genes
 
 FeaturePlot(tsne, features = marker_genes,
             pt.size = 2,
             cols = c("grey90", "red2"),
-            ncol = 3, 
-            combine = F)
+            ncol = 3)
 ```
+
+### Feature Plot for control genes
 
 ```{r fig.width=10, fig.height=6.6}
 #| label: feature_ctrl
@@ -152,6 +159,8 @@ FeaturePlot(tsne, features = cont_markers,
             ncol = 3)
 ```
 
+### Feature Plot for genes of interest
+
 ```{r fig.width=10, fig.height=10}
 #| label: feature_interest
 
@@ -160,6 +169,8 @@ FeaturePlot(tsne, features = interest_markers,
             cols = c("grey90", "red2"),
             ncol = 3)
 ```
+
+### Feature Plot for Cell adhesion genes
 
 ```{r fig.width=10, fig.height=10}
 #| label: feature_CC
@@ -170,9 +181,9 @@ FeaturePlot(tsne, features = CC_markers,
             ncol = 3)
 ```
 
-Differential expression
+## Step 5: Differential expression
 
-Violin Plots
+### Violin Plots
 
 ```{r fig.width=5, fig.height=4}
 #| label: violin
@@ -183,7 +194,7 @@ Violin Plots
 VlnPlot(seurat, features = c(interest_markers),  log= TRUE, combine = F)
 ```
 
-**Dotplot**
+### **Dotplot**
 
 ```{r fig.width=9, fig.height=4}
 #| label: dotplot

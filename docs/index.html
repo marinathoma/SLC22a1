@@ -135,7 +135,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#seurat-analysis-for-slc22a1-project" id="toc-seurat-analysis-for-slc22a1-project" class="nav-link active" data-scroll-target="#seurat-analysis-for-slc22a1-project">Seurat analysis for SLC22a1 project</a>
+  <ul class="collapse">
+  <li><a href="#step-1-create-seurat-qc" id="toc-step-1-create-seurat-qc" class="nav-link" data-scroll-target="#step-1-create-seurat-qc"><strong>Step 1: Create Seurat + QC</strong></a></li>
+  <li><a href="#step-2-normalizing-and-identification-of-highly-variable-genes" id="toc-step-2-normalizing-and-identification-of-highly-variable-genes" class="nav-link" data-scroll-target="#step-2-normalizing-and-identification-of-highly-variable-genes"><strong>Step 2: Normalizing and identification of highly variable genes</strong></a></li>
+  <li><a href="#step-3-principal-componant-analysis-pca" id="toc-step-3-principal-componant-analysis-pca" class="nav-link" data-scroll-target="#step-3-principal-componant-analysis-pca"><strong>Step 3: Principal componant analysis (PCA)</strong></a></li>
+  </ul></li>
+  <li><a href="#visualisation-of-the-cells" id="toc-visualisation-of-the-cells" class="nav-link" data-scroll-target="#visualisation-of-the-cells"><strong>Visualisation of the cells</strong></a>
+  <ul class="collapse">
+  <li><a href="#step-4-clustering" id="toc-step-4-clustering" class="nav-link" data-scroll-target="#step-4-clustering">Step 4: Clustering</a>
+  <ul class="collapse">
+  <li><a href="#feature-plot-for-marker-genes" id="toc-feature-plot-for-marker-genes" class="nav-link" data-scroll-target="#feature-plot-for-marker-genes">Feature Plot for marker genes</a></li>
+  <li><a href="#feature-plot-for-control-genes" id="toc-feature-plot-for-control-genes" class="nav-link" data-scroll-target="#feature-plot-for-control-genes">Feature Plot for control genes</a></li>
+  <li><a href="#feature-plot-for-genes-of-interest" id="toc-feature-plot-for-genes-of-interest" class="nav-link" data-scroll-target="#feature-plot-for-genes-of-interest">Feature Plot for genes of interest</a></li>
+  <li><a href="#feature-plot-for-cell-adhesion-genes" id="toc-feature-plot-for-cell-adhesion-genes" class="nav-link" data-scroll-target="#feature-plot-for-cell-adhesion-genes">Feature Plot for Cell adhesion genes</a></li>
+  </ul></li>
+  <li><a href="#step-5-differential-expression" id="toc-step-5-differential-expression" class="nav-link" data-scroll-target="#step-5-differential-expression">Step 5: Differential expression</a>
+  <ul class="collapse">
+  <li><a href="#violin-plots" id="toc-violin-plots" class="nav-link" data-scroll-target="#violin-plots">Violin Plots</a></li>
+  <li><a href="#dotplot" id="toc-dotplot" class="nav-link" data-scroll-target="#dotplot"><strong>Dotplot</strong></a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -157,7 +183,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p><strong>Create Seurat + QC</strong></p>
+<section id="seurat-analysis-for-slc22a1-project" class="level1">
+<h1>Seurat analysis for SLC22a1 project</h1>
+<section id="step-1-create-seurat-qc" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-create-seurat-qc"><strong>Step 1: Create Seurat + QC</strong></h2>
 <p>In the following code we create a seurat object and do standard QC</p>
 <ul>
 <li><p>Number of unique genes detected for each cell. Low-quality cells or empty droplets as well as cell doublets or multiplets will be filtered out.</p></li>
@@ -219,7 +248,9 @@ Active assay: RNA (14587 features, 0 variable features)
  1 layer present: counts</code></pre>
 </div>
 </div>
-<p><strong>Normalizing and identification of highly variable genes</strong></p>
+</section>
+<section id="step-2-normalizing-and-identification-of-highly-variable-genes" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-normalizing-and-identification-of-highly-variable-genes"><strong>Step 2: Normalizing and identification of highly variable genes</strong></h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>seurat <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(seurat, <span class="at">normalization.method =</span> <span class="st">"LogNormalize"</span>, <span class="at">scale.factor =</span> <span class="dv">10000</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -244,14 +275,21 @@ Active assay: RNA (14587 features, 0 variable features)
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>all.genes <span class="ot">&lt;-</span> <span class="fu">rownames</span>(seurat)</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>seurat <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(seurat, <span class="at">features =</span> all.genes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><strong>Principal componant analysis (PCA)</strong></p>
+</section>
+<section id="step-3-principal-componant-analysis-pca" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-principal-componant-analysis-pca"><strong>Step 3: Principal componant analysis (PCA)</strong></h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>seurat <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(seurat, <span class="at">features =</span> <span class="fu">VariableFeatures</span>(<span class="at">object =</span> seurat))</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">VizDimLoadings</span>(seurat, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">reduction =</span> <span class="st">"pca"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#DimHeatmap(seurat, dims = 1, cells = 500, balanced = TRUE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><strong>Cluster the cells</strong></p>
+</section>
+</section>
+<section id="visualisation-of-the-cells" class="level1">
+<h1><strong>Visualisation of the cells</strong></h1>
+<section id="step-4-clustering" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-clustering">Step 4: Clustering</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>seurat <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(seurat, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>seurat <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(seurat, <span class="at">reduction.type =</span><span class="st">"pca"</span>, <span class="at">resolution =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -286,172 +324,64 @@ Elapsed time: 0 seconds</code></pre>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>CC_markers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Itga1"</span>, <span class="st">"Itga5"</span>, <span class="st">"Itga7"</span>, <span class="st">"Cdh2"</span>, <span class="st">"Cdh11"</span>, <span class="st">"Nectin2"</span>, <span class="st">"Selp"</span>, <span class="st">"Sell"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="feature-plot-for-marker-genes" class="level3">
+<h3 class="anchored" data-anchor-id="feature-plot-for-marker-genes">Feature Plot for marker genes</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(tsne, <span class="at">features =</span> marker_genes,</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">pt.size =</span> <span class="dv">2</span>,</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"grey90"</span>, <span class="st">"red2"</span>),</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ncol =</span> <span class="dv">3</span>, </span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">combine =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[[1]]</code></pre>
-</div>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ncol =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-1.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[2]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-2.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[3]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-3.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[4]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-4.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[5]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-5.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[6]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-6.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[7]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-7.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[8]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-8.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[9]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-9.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[10]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-10.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[11]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-11.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[12]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-12.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[13]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-13.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[14]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-14.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[15]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-15.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[16]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-16.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[17]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-17.png" class="img-fluid" width="480"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[18]]</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/feature_marker_genes-18.png" class="img-fluid" width="480"></p>
+<p><img src="index_files/figure-html/feature_marker_genes-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
+</section>
+<section id="feature-plot-for-control-genes" class="level3">
+<h3 class="anchored" data-anchor-id="feature-plot-for-control-genes">Feature Plot for control genes</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(tsne, <span class="at">features =</span> cont_markers,</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">pt.size =</span> <span class="dv">2</span>,</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"grey90"</span>, <span class="st">"red2"</span>),</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ncol =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(tsne, <span class="at">features =</span> cont_markers,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">pt.size =</span> <span class="dv">2</span>,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"grey90"</span>, <span class="st">"red2"</span>),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ncol =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/feature_ctrl-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
+</section>
+<section id="feature-plot-for-genes-of-interest" class="level3">
+<h3 class="anchored" data-anchor-id="feature-plot-for-genes-of-interest">Feature Plot for genes of interest</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(tsne, <span class="at">features =</span> interest_markers,</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">pt.size =</span> <span class="dv">2</span>,</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"grey90"</span>, <span class="st">"red2"</span>),</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ncol =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(tsne, <span class="at">features =</span> interest_markers,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">pt.size =</span> <span class="dv">2</span>,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"grey90"</span>, <span class="st">"red2"</span>),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ncol =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/feature_interest-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
+</section>
+<section id="feature-plot-for-cell-adhesion-genes" class="level3">
+<h3 class="anchored" data-anchor-id="feature-plot-for-cell-adhesion-genes">Feature Plot for Cell adhesion genes</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(tsne, <span class="at">features =</span> CC_markers,</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">pt.size =</span> <span class="dv">2</span>,</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"grey90"</span>, <span class="st">"red2"</span>),</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ncol =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(tsne, <span class="at">features =</span> CC_markers,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">pt.size =</span> <span class="dv">2</span>,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"grey90"</span>, <span class="st">"red2"</span>),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ncol =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/feature_CC-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
-<p>Differential expression</p>
-<p>Violin Plots</p>
+</section>
+</section>
+<section id="step-5-differential-expression" class="level2">
+<h2 class="anchored" data-anchor-id="step-5-differential-expression">Step 5: Differential expression</h2>
+<section id="violin-plots" class="level3">
+<h3 class="anchored" data-anchor-id="violin-plots">Violin Plots</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">#cluster1.markers &lt;- FindMarkers(SOF, ident.1 = 1, min.pct = 0.25)</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co">#head(cluster1.markers, n = 5)</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(seurat, <span class="at">features =</span> <span class="fu">c</span>(interest_markers),  <span class="at">log=</span> <span class="cn">TRUE</span>, <span class="at">combine =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#cluster1.markers &lt;- FindMarkers(SOF, ident.1 = 1, min.pct = 0.25)</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#head(cluster1.markers, n = 5)</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(seurat, <span class="at">features =</span> <span class="fu">c</span>(interest_markers),  <span class="at">log=</span> <span class="cn">TRUE</span>, <span class="at">combine =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -501,10 +431,12 @@ Elapsed time: 0 seconds</code></pre>
 <p><img src="index_files/figure-html/violin-7.png" class="img-fluid" width="480"></p>
 </div>
 </div>
-<p><strong>Dotplot</strong></p>
+</section>
+<section id="dotplot" class="level3">
+<h3 class="anchored" data-anchor-id="dotplot"><strong>Dotplot</strong></h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DotPlot</span>(<span class="at">object =</span> seurat, <span class="at">features =</span> marker_genes) <span class="sc">+</span> </span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DotPlot</span>(<span class="at">object =</span> seurat, <span class="at">features =</span> marker_genes) <span class="sc">+</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Scaling data with a low number of groups may produce misleading
 results</code></pre>
@@ -515,6 +447,9 @@ results</code></pre>
 </div>
 
 
+</section>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
