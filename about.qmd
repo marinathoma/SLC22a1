@@ -2,8 +2,8 @@
 title: "About"
 ---
 
-About this site
+Project aim: Characterize SMC around LECs isolated from mice
 
-```{r}
-1 + 1
-```
+Project lead: Olga Gkountidi
+
+Analysis: Marina Thoma

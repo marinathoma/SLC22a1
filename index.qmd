@@ -2,10 +2,201 @@
 title: "SLC22a1"
 ---
 
-This is a Quarto website.
+```{r setup, include=FALSE}
+# Set options to suppress warnings
+options(warn = -1)  # Suppress warnings
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+#| label: load-libs
+#| echo: true
+#| output: FALSE
+
+
+library(ggplot2)
+library(scater)
+library(scuttle)
+library(ggplot2)
+library(S4Vectors)
+library(SingleCellExperiment)
+library(SummarizedExperiment)
+library(GenomeInfoDb)
+library(devtools)
+library(Seurat)
+library(SCnorm)
+```
+
+**Create Seurat + QC**
+
+In the following code we create a seurat object and do standard QC
+
+-   Number of unique genes detected for each cell. Low-quality cells or empty droplets as well as cell doublets or multiplets will be filtered out.
+
+-   Pecentage of mitochondrial genes: Dying cells have more mitochondrial genes.
+
+-   nFeature_RNA: number of genes or transcripts detected in each cell (normally anywhere between 500 and 5'000 genes per cell)
+
+-   nCount_RNA: total number of RNA molecules detected in each cell
+
+```{r fig.width=5, fig.height=4}
+#| label: data
+
+
+
+
+#- Data Filtering
+raw_data <-read.table("raw_counts.txt", sep="\t", row.names = 1, header=T)
+
+
+# Create a Seurat object
+seurat_obj <- CreateSeuratObject(counts = raw_data, project = "Mouse_SMCs", min.cells = 3)
+
+print("raw unfiltered data:")
+seurat_obj
+
+
+seurat_obj[["percent.mt"]] <- PercentageFeatureSet(seurat_obj, pattern = "^mt")
+
+#seurat_obj[["percent.mt"]]
+
+# Visualize QC metrics as a violin plot
+VlnPlot(seurat_obj, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
+
+plot1 <- FeatureScatter(seurat_obj, feature1 = "nCount_RNA", feature2 = "percent.mt")
+plot2 <- FeatureScatter(seurat_obj, feature1 = "nCount_RNA", feature2 = "nFeature_RNA")
+plot1
+plot2
+
+
+#filter the cells:
+seurat <- subset(seurat_obj, subset = nFeature_RNA > 200 & nFeature_RNA < 4200 & percent.mt < 10 & nCount_RNA < 1000000 )
+
+
+print("filtered data:")
+seurat
+
+```
+
+**Normalizing and identification of highly variable genes**
+
+```{r fig.width=5, fig.height=4}
+#| label: normalizing
+
+seurat <- NormalizeData(seurat, normalization.method = "LogNormalize", scale.factor = 10000)
+
+
+#set the treshhold for nfeatures!
+seurat <- FindVariableFeatures(seurat, selection.method = "vst", nfeatures = 2000)
+top10 <- head(VariableFeatures(seurat), 10)
+
+
+plot1 <- VariableFeaturePlot(seurat)
+plot2 <- LabelPoints(plot = plot1, points = top10, repel = TRUE, xnudge = 0, ynudge = 0)
+plot1
+plot2
+
+#scaling the data so that the mean expression across all cells is 0
+
+all.genes <- rownames(seurat)
+seurat <- ScaleData(seurat, features = all.genes)
+```
+
+**Principal componant analysis (PCA)**
+
+```{r fig.width=9, fig.height=4, message=FALSE}
+#| label: PCA
+#| output: false
+
+seurat <- RunPCA(seurat, features = VariableFeatures(object = seurat))
+
+VizDimLoadings(seurat, dims = 1:2, reduction = "pca")
+
+#DimHeatmap(seurat, dims = 1, cells = 500, balanced = TRUE)
+
+```
+
+**Cluster the cells**
+
+```{r fig.width=5, fig.height=4, message=FALSE}
+#| label: clustering
+
+seurat <- FindNeighbors(seurat, dims = 1:10)
+seurat <- FindClusters(seurat, reduction.type ="pca", resolution = 0.2)
+
+
+umap <- RunUMAP(seurat, dims = 1:10)
+DimPlot(umap, reduction = "umap", label = T, label.size = 7)
+
+tsne <- RunTSNE(seurat, dims = 1:10)
+DimPlot(tsne, reduction = "tsne", label = T, label.size = 7)
+```
 
 ```{r}
-1 + 1
+marker_genes <- c("Myh11","Acta2","Tagln","Ddr2","Cdh5","Pecam1","Cldn5","Ptprc","Prox1","Col1a1","Fap","Thy1","Pdgfra","Pdgfrb", "Rgs5", "Vtn", "Cspg4", "Sema3a")
+
+cont_markers <- c("Pecam1", "Cdh5", "Pdpn", "Ptprc")
+
+interest_markers <- c("Cspg4", "Ano1", "Sdc1", "Enpp2", "Dcn", "Slc22a3", "Slc22a1")
+
+CC_markers <- c("Itga1", "Itga5", "Itga7", "Cdh2", "Cdh11", "Nectin2", "Selp", "Sell")
+
+```
+
+```{r fig.width=5, fig.height=4}
+#| label: feature_marker_genes
+
+FeaturePlot(tsne, features = marker_genes,
+            pt.size = 2,
+            cols = c("grey90", "red2"),
+            ncol = 3, 
+            combine = F)
+```
+
+```{r fig.width=5, fig.height=4}
+#| label: feature_ctrl
+
+FeaturePlot(tsne, features = cont_markers,
+            pt.size = 2,
+            cols = c("grey90", "red2"),
+            ncol = 3, 
+            combine = F)
+```
+
+```{r fig.width=5, fig.height=4}
+#| label: feature_interest
+
+FeaturePlot(tsne, features = interest_markers,
+            pt.size = 2,
+            cols = c("grey90", "red2"),
+            ncol = 3, 
+            combine = F)
+```
+
+```{r fig.width=10, fig.height=10}
+#| label: feature_CC
+
+FeaturePlot(tsne, features = CC_markers,
+            pt.size = 2,
+            cols = c("grey90", "red2"),
+            ncol = 3)
+```
+
+Differential expression
+
+Violin Plots
+
+```{r fig.width=5, fig.height=4}
+#| label: violin
+
+#cluster1.markers <- FindMarkers(SOF, ident.1 = 1, min.pct = 0.25)
+#head(cluster1.markers, n = 5)
+
+VlnPlot(seurat, features = c(interest_markers),  log= TRUE, combine = F)
+```
+
+**Dotplot**
+
+```{r fig.width=9, fig.height=4}
+#| label: dotplot
+
+DotPlot(object = seurat, features = marker_genes) + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
 ```
