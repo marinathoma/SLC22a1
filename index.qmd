@@ -2,14 +2,7 @@
 title: "SLC22a1"
 ---
 
-```{r setup, include=FALSE}
-# Set options to suppress warnings
-options(warn = -1)  # Suppress warnings
-
-#| label: load-libs
-#| echo: true
-#| output: FALSE
-
+```{r warning=FALSE, message=FALSE, echo=FALSE}
 
 library(ggplot2)
 library(scater)
@@ -36,7 +29,7 @@ In the following code we create a seurat object and do standard QC
 
 -   nCount_RNA: total number of RNA molecules detected in each cell
 
-```{r fig.width=5, fig.height=4}
+```{r fig.width=5, fig.height=4, message=FALSE, warning=FALSE}
 #| label: data
 
 
@@ -77,7 +70,7 @@ seurat
 
 **Normalizing and identification of highly variable genes**
 
-```{r fig.width=5, fig.height=4}
+```{r fig.width=5, fig.height=4, message=FALSE, warning=FALSE}
 #| label: normalizing
 
 seurat <- NormalizeData(seurat, normalization.method = "LogNormalize", scale.factor = 10000)
@@ -101,7 +94,7 @@ seurat <- ScaleData(seurat, features = all.genes)
 
 **Principal componant analysis (PCA)**
 
-```{r fig.width=9, fig.height=4, message=FALSE}
+```{r fig.width=9, fig.height=4, message=FALSE, warning=FALSE}
 #| label: PCA
 #| output: false
 
@@ -115,7 +108,7 @@ VizDimLoadings(seurat, dims = 1:2, reduction = "pca")
 
 **Cluster the cells**
 
-```{r fig.width=5, fig.height=4, message=FALSE}
+```{r fig.width=5, fig.height=4, message=FALSE, warning=FALSE}
 #| label: clustering
 
 seurat <- FindNeighbors(seurat, dims = 1:10)
@@ -150,24 +143,22 @@ FeaturePlot(tsne, features = marker_genes,
             combine = F)
 ```
 
-```{r fig.width=5, fig.height=4}
+```{r fig.width=10, fig.height=6.6}
 #| label: feature_ctrl
 
 FeaturePlot(tsne, features = cont_markers,
             pt.size = 2,
             cols = c("grey90", "red2"),
-            ncol = 3, 
-            combine = F)
+            ncol = 3)
 ```
 
-```{r fig.width=5, fig.height=4}
+```{r fig.width=10, fig.height=10}
 #| label: feature_interest
 
 FeaturePlot(tsne, features = interest_markers,
             pt.size = 2,
             cols = c("grey90", "red2"),
-            ncol = 3, 
-            combine = F)
+            ncol = 3)
 ```
 
 ```{r fig.width=10, fig.height=10}
